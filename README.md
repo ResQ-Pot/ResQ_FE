@@ -1,1 +1,1 @@
-# 🪴ResQ-Pot Frontend Repository
+# ResQ-Pot Frontend Repository🪴
