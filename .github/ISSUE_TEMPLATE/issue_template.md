@@ -1,7 +1,7 @@
 ---
 name: Feature
 about: 기능구현
-title: "[FEAT]"
+title: "[FEAT/#n] "
 labels: feature
 assignees: ''
 
