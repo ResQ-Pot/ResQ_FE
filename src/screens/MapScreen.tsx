@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback } from 'react';
+import { useRef, useState, useCallback, useEffect } from 'react';
 import { View, Text, ActivityIndicator } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Region } from 'react-native-maps';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -30,6 +30,22 @@ export default function MapScreen() {
     useMapStore();
 
   const [isSearching, setIsSearching] = useState(false);
+  const hasCenteredRef = useRef(false);
+
+  useEffect(() => {
+    if (coords && !hasCenteredRef.current) {
+      hasCenteredRef.current = true;
+      mapRef.current?.animateToRegion(
+        {
+          latitude: coords.latitude,
+          longitude: coords.longitude,
+          latitudeDelta: 0.02,
+          longitudeDelta: 0.02,
+        },
+        600,
+      );
+    }
+  }, [coords]);
 
   const { data: nearbyPlaces = [], isLoading: placesLoading } = useNearbyPlaces(
     coords,

@@ -1,77 +1,67 @@
-import { View } from 'react-native';
+import { View, Animated } from 'react-native';
 import { Marker, Circle } from 'react-native-maps';
 import type { Coordinates } from '@t/location';
+import { useRef, useEffect } from 'react';
 
 interface Props {
   coords: Coordinates;
 }
 
 export function UserLocationMarker({ coords }: Props) {
-  const hasHeading = coords.heading != null && coords.heading >= 0;
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(scaleAnim, { toValue: 1.4, duration: 1500, useNativeDriver: true }),
+        Animated.timing(scaleAnim, { toValue: 1, duration: 1500, useNativeDriver: true }),
+      ])
+    ).start();
+  }, []);
 
   return (
     <>
-      {/* 정확도 반경 원 */}
+      {/* 1. 기능: 오차 범위는 유지 (Grace님 코드) */}
       {coords.accuracy != null && coords.accuracy > 0 && (
         <Circle
           center={{ latitude: coords.latitude, longitude: coords.longitude }}
           radius={coords.accuracy}
-          fillColor="rgba(66, 133, 244, 0.12)"
-          strokeColor="rgba(66, 133, 244, 0.3)"
+          fillColor="rgba(66, 133, 244, 0.08)"
+          strokeColor="rgba(66, 133, 244, 0.2)"
           strokeWidth={1}
         />
       )}
 
-      {/* 위치 마커 */}
       <Marker
         coordinate={{ latitude: coords.latitude, longitude: coords.longitude }}
         anchor={{ x: 0.5, y: 0.5 }}
-        tracksViewChanges={false}
+        tracksViewChanges
       >
-        <View style={{ width: 48, height: 48, alignItems: 'center', justifyContent: 'center' }}>
-          {/* 방향 화살표 (heading이 있을 때만) */}
-          {hasHeading && (
-            <View
-              style={{
-                position: 'absolute',
-                width: 48,
-                height: 48,
-                alignItems: 'center',
-                transform: [{ rotate: `${coords.heading}deg` }],
-              }}
-            >
-              <View
-                style={{
-                  width: 0,
-                  height: 0,
-                  marginTop: 2,
-                  borderLeftWidth: 7,
-                  borderRightWidth: 7,
-                  borderBottomWidth: 14,
-                  borderLeftColor: 'transparent',
-                  borderRightColor: 'transparent',
-                  borderBottomColor: 'rgba(66, 133, 244, 0.85)',
-                }}
-              />
+        <View style={{ alignItems: 'center', justifyContent: 'center', width: 60, height: 60 }}>
+          {/* 2. 디자인: 세모 대신 방향을 나타내는 부드러운 빛무리 (선택 사항) */}
+          {coords.heading != null && (
+            <View style={{
+              position: 'absolute',
+              transform: [{ rotate: `${coords.heading}deg` }]
+            }}>
+               {/* 여기에 화살표 아이콘(SVG/Image)을 넣으면 훨씬 예쁩니다 */}
             </View>
           )}
 
-          {/* 파란 점 */}
-          <View
-            style={{
-              width: 18,
-              height: 18,
-              borderRadius: 9,
-              backgroundColor: '#4285F4',
-              borderWidth: 3,
-              borderColor: 'white',
-              shadowColor: '#000',
-              shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.3,
-              shadowRadius: 3,
-              elevation: 5,
-            }}
-          />
+          {/* 3. 디자인: 파동 애니메이션 (제 제안 코드) */}
+          <Animated.View style={{
+            position: 'absolute',
+            width: 30, height: 30, borderRadius: 15,
+            backgroundColor: 'rgba(66, 133, 244, 0.3)',
+            transform: [{ scale: scaleAnim }]
+          }} />
+
+          {/* 4. 디자인: 깔끔한 중심점 */}
+          <View style={{
+            width: 16, height: 16, borderRadius: 8,
+            backgroundColor: '#4285F4', borderWidth: 3, borderColor: 'white',
+            elevation: 4, shadowOpacity: 0.2
+          }} />
         </View>
       </Marker>
     </>

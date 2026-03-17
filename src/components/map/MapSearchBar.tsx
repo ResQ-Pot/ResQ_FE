@@ -16,10 +16,10 @@ export function MapSearchBar({ value, onChangeText, onFilterPress }: MapSearchBa
 
   return (
     <View className="flex-row items-center bg-white rounded-2xl px-4 py-3 gap-3 shadow-md">
-      <SearchIcon width={20} height={20} color={colors.gray[7]} />
+      <SearchIcon width={21} height={21} color={colors.gray[7]} />
       <TextInput
         ref={inputRef}
-        className="flex-1 font-pregular text-sm text-gray-13"
+        className="flex-1 font-pregular text-[15px] leading-6 text-gray-13"
         placeholder="병원, 대피소 검색..."
         placeholderTextColor={colors.gray[7]}
         value={value}
