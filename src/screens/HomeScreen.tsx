@@ -1,0 +1,46 @@
+import { ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { HomeHeader } from '@components/home/HomeHeader';
+import { SafetyStatusCard } from '@components/home/SafetyStatusCard';
+import { DisasterBanner } from '@components/home/DisasterBanner';
+import { WeatherCard } from '@components/home/WeatherCard';
+import { ChecklistCard } from '@components/home/ChecklistCard';
+import { PotStatusCard } from '@components/home/PotStatusCard';
+import { View } from 'react-native';
+
+export default function HomeScreen() {
+  return (
+    <SafeAreaView className="flex-1 bg-gray-3" edges={['top']}>
+      <HomeHeader location="서울 동작구" />
+
+      <ScrollView
+        className="flex-1"
+        contentContainerStyle={{ gap: 19, paddingBottom: 24 }}
+        showsVerticalScrollIndicator={false}
+      >
+        <SafetyStatusCard
+          userName="은혜"
+          message="외출하기 좋은 맑은 날씨예요."
+          subMessage="가벼운 산책을 추천합니다."
+          timestamp="2026년 1월 12일 12:59:02"
+          status="safe"
+        />
+
+        <DisasterBanner hasDisaster={false} disasterText="현재 재난 상황 없음" />
+
+        <View className="flex-row mx-4 items-between gap-[19px]">
+          <WeatherCard tempC={14} rainPercent={0} windSpeed={5} />
+          <ChecklistCard />
+        </View>
+
+        <PotStatusCard
+          connected={true}
+          tempC={14}
+          humidity={60}
+          message={'오늘 비가 내리네요!\n우산 챙기세요'}
+        />
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
