@@ -21,7 +21,7 @@ export function PotStatusCard({
 }: PotStatusCardProps) {
   return (
     <View
-      className="mx-4 bg-white rounded-2xl p-[25px]"
+      className="bg-white rounded-2xl p-6"
       style={{ shadowColor: '#000', shadowOpacity: 0.06, shadowRadius: 8, shadowOffset: { width: 0, height: 2 }, elevation: 2 }}
     >
       <View className="flex-row items-start justify-between">

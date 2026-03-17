@@ -12,7 +12,7 @@ export function ChecklistCard({ onPress }: ChecklistCardProps) {
     <TouchableOpacity
       activeOpacity={0.85}
       onPress={onPress}
-      className="flex-1 rounded-2xl p-[25px] overflow-hidden"
+      className="flex-1 rounded-2xl pt-6 pl-6 overflow-hidden"
       style={{ backgroundColor: colors.green[500] }}
     >
       <Text className="text-base font-pbold text-white">재난 체크리스트</Text>
@@ -21,7 +21,7 @@ export function ChecklistCard({ onPress }: ChecklistCardProps) {
       <View className="items-end mt-2">
         <Image
           source={checklistImage}
-          style={{ width: 90, height: 90 }}
+          style={{ width: 120, height: 85 }}
           resizeMode="contain"
         />
       </View>

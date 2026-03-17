@@ -16,7 +16,7 @@ export function WeatherCard({
 }: WeatherCardProps) {
   return (
     <View
-      className="flex-1 bg-white rounded-2xl p-[25px]"
+      className="flex-1 bg-white rounded-2xl p-6"
       style={{ shadowColor: '#000', shadowOpacity: 0.06, shadowRadius: 8, shadowOffset: { width: 0, height: 2 }, elevation: 2 }}
     >
       <View className="flex-row items-center justify-between mb-4">
@@ -24,7 +24,7 @@ export function WeatherCard({
         <Text className="text-2xl font-pbold text-gray-13">{tempC}°C</Text>
       </View>
 
-      <View className="flex-row justify-around">
+      <View className="flex-row justify-around gap-4">
 
         <View className="items-center">
           <View className="w-12 h-12 rounded-full bg-['#d8f3dc'] items-center justify-center mb-2">
