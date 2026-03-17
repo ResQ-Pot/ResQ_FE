@@ -87,7 +87,7 @@ export default function MapScreen() {
       <MapView
         ref={mapRef}
         provider={PROVIDER_GOOGLE}
-        className="flex-1"
+        style={{ flex: 1, width: '100%', height: '100%' }}
         initialRegion={initialRegion}
         onMapReady={() => console.log("✅ Map is Ready")}
         onMapLoaded={() => console.log("✅ Map is Loaded")}
