@@ -1,5 +1,6 @@
 import { ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
 
 import { HomeHeader } from '@components/home/HomeHeader';
 import { SafetyStatusCard } from '@components/home/SafetyStatusCard';
@@ -16,12 +17,17 @@ function getStatusFromScore(score: number): 'safe' | 'warning' | 'danger' {
 }
 
 export default function HomeScreen() {
+  const router = useRouter();
   const riskScore = 30; // TODO: 실제 데이터로 교체
   const status = getStatusFromScore(riskScore);
 
   return (
     <SafeAreaView className="flex-1 bg-gray-3" edges={['top']}>
-      <HomeHeader location="서울 동작구" />
+      <HomeHeader
+        location="서울 동작구"
+        onBellPress={() => router.push('/notification')}
+        onArchivePress={() => router.push('/disaster-sms')}
+      />
 
       <ScrollView
         className="flex-1"
