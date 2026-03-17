@@ -15,7 +15,7 @@ export function MapSearchBar({ value, onChangeText, onFilterPress }: MapSearchBa
   const inputRef = useRef<TextInput>(null);
 
   return (
-    <View className="flex-row items-center bg-white rounded-2xl px-4 py-3 gap-3 shadow-md">
+    <View className="flex-row items-center bg-white rounded-full px-4 py-2 gap-3 shadow-md">
       <SearchIcon width={21} height={21} color={colors.gray[7]} />
       <TextInput
         ref={inputRef}
