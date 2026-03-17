@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import { Marker, Circle } from 'react-native-maps';
-import type { Coordinates } from '@types/location';
+import type { Coordinates } from '@t/location';
 
 interface Props {
   coords: Coordinates;
