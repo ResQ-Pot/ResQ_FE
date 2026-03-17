@@ -9,14 +9,23 @@ import { ChecklistCard } from '@components/home/ChecklistCard';
 import { PotStatusCard } from '@components/home/PotStatusCard';
 import { View } from 'react-native';
 
+function getStatusFromScore(score: number): 'safe' | 'warning' | 'danger' {
+  if (score <= 40) return 'safe';
+  if (score <= 70) return 'warning';
+  return 'danger';
+}
+
 export default function HomeScreen() {
+  const riskScore = 30; // TODO: 실제 데이터로 교체
+  const status = getStatusFromScore(riskScore);
+
   return (
     <SafeAreaView className="flex-1 bg-gray-3" edges={['top']}>
       <HomeHeader location="서울 동작구" />
 
       <ScrollView
         className="flex-1"
-        contentContainerStyle={{ gap: 19, paddingBottom: 24 }}
+        contentContainerStyle={{ gap: 19, paddingHorizontal: 24, paddingBottom: 24 }}
         showsVerticalScrollIndicator={false}
       >
         <SafetyStatusCard
@@ -24,12 +33,12 @@ export default function HomeScreen() {
           message="외출하기 좋은 맑은 날씨예요."
           subMessage="가벼운 산책을 추천합니다."
           timestamp="2026년 1월 12일 12:59:02"
-          status="safe"
+          status={status}
         />
 
-        <DisasterBanner hasDisaster={false} disasterText="현재 재난 상황 없음" />
+        <DisasterBanner status={status} disasterText="현재 재난 상황 없음" />
 
-        <View className="flex-row mx-4 items-between gap-[19px]">
+        <View className="flex-row items-between gap-[19px]">
           <WeatherCard tempC={14} rainPercent={0} windSpeed={5} />
           <ChecklistCard />
         </View>

@@ -2,6 +2,7 @@ import { View, Text } from 'react-native';
 
 import { colors } from '@config/tokens';
 import AvatarHelmet from '@/assets/icons/avatar-helmet.svg';
+import { StatusBadge } from './StatusBadge';
 
 type SafetyStatus = 'safe' | 'warning' | 'danger';
 
@@ -13,10 +14,10 @@ interface SafetyStatusCardProps {
   status?: SafetyStatus;
 }
 
-const STATUS_CONFIG: Record<SafetyStatus, { label: string; color: string }> = {
-  safe: { label: '안전', color: colors.status.safe },
-  warning: { label: '주의', color: colors.status.warning },
-  danger: { label: '위험', color: colors.status.danger },
+const STATUS_CONFIG: Record<SafetyStatus, { label: string; color: string; textColor: string }> = {
+  safe: { label: '안전', color: colors.status.safe, textColor: colors.status.safe },
+  warning: { label: '주의', color: colors.status.warning, textColor: colors.status.warning },
+  danger: { label: '위험', color: colors.status.danger, textColor: colors.status.danger },
 };
 
 export function SafetyStatusCard({
@@ -26,10 +27,10 @@ export function SafetyStatusCard({
   timestamp = '2026년 1월 12일 12:59:02',
   status = 'safe',
 }: SafetyStatusCardProps) {
-  const { label, color } = STATUS_CONFIG[status];
+  const { label, color, textColor } = STATUS_CONFIG[status];
 
   return (
-    <View className="mx-4 bg-white rounded-2xl p-[25px]" style={{ shadowColor: colors.gray[13], shadowOpacity: 0.06, shadowRadius: 8, shadowOffset: { width: 0, height: 2 }, elevation: 2 }}>
+    <View className="bg-white rounded-2xl px-6 pt-7 pb-5" style={{ shadowColor: colors.gray[13], shadowOpacity: 0.06, shadowRadius: 8, shadowOffset: { width: 0, height: 2 }, elevation: 2 }}>
       <View className="flex-row items-start justify-between">
         <View className="flex-1">
           <Text className="text-[12px] font-pregular text-gray-8">{userName}님의 안전 상태</Text>
@@ -43,9 +44,8 @@ export function SafetyStatusCard({
         </View>
       </View>
 
-      <View className="mt-3 self-start flex-row items-center gap-2 px-4 py-2 rounded-full border-gray-5 mt-[10px]">
-        <View className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: color }} />
-        <Text className="text-sm font-pmedium text-gray-13">{label}</Text>
+      <View className="mt-[12px]">
+        <StatusBadge label={label} dotColor={color} textColor={textColor} />
       </View>
     </View>
   );
