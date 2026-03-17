@@ -22,6 +22,7 @@ const tokens = {
       1: '#ffffff',
       2: '#fdfdfd',
       3: '#f6f6f6',
+      4: '#F1F2F2',
       5: '#dcddde',
       6: '#c5c7c9',
       7: '#979a9d',
