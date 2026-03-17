@@ -3,4 +3,5 @@ export interface Coordinates {
   longitude: number;
   altitude?: number | null;
   accuracy?: number | null;
+  heading?: number | null;
 }

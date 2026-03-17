@@ -9,6 +9,7 @@ import { useMapStore } from '@store/mapStore';
 import { MapSearchBar } from '@components/map/MapSearchBar';
 import { CategoryFilter } from '@components/map/CategoryFilter';
 import { PlaceMarker } from '@components/map/PlaceMarker';
+import { UserLocationMarker } from '@components/map/UserLocationMarker';
 import { PlaceBottomSheet } from '@components/map/PlaceBottomSheet';
 import { colors } from '@config/tokens';
 import type { Place } from '@t/place';
@@ -92,10 +93,10 @@ export default function MapScreen() {
         onMapReady={() => console.log("✅ Map is Ready")}
         onMapLoaded={() => console.log("✅ Map is Loaded")}
         onRegionChangeComplete={(region) => console.log("📍 Region Changed", region)}
-        showsUserLocation
         showsMyLocationButton={false}
         showsCompass={false}
       >
+        {coords && <UserLocationMarker coords={coords} />}
         {displayPlaces.map((place) => (
           <PlaceMarker
             key={place.id}

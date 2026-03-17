@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import * as Location from 'expo-location';
 import { requestLocationPermission, watchPosition } from '@utils/location';
-import type { Coordinates } from '@types/location';
+import type { Coordinates } from '@t/location';
 
 interface UseLocationResult {
   coords: Coordinates | null;
