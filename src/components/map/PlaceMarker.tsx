@@ -1,14 +1,16 @@
-import { View, Text } from 'react-native';
 import { Marker } from 'react-native-maps';
-import { colors } from '@config/tokens';
 import type { Place } from '@t/place';
 
-const CATEGORY_CONFIG = {
-  hospital: { color: '#EF4444', label: '병원' },
-  shelter: { color: colors.green[500], label: '대피소' },
-  pharmacy: { color: '#8B5CF6', label: '약국' },
-  fire_station: { color: '#F97316', label: '소방서' },
-} as const;
+const CATEGORY_PIN_COLOR: Record<string, string> = {
+  hospital: '#F28B82',
+  shelter: '#81C995',
+  pharmacy: '#F06292',
+  fire_station: '#E67E22',
+  aed: '#F24822',
+  police: '#7BAAF7',
+  water: '#4FC3F7',
+  convenience: '#B39DDB',
+};
 
 interface PlaceMarkerProps {
   place: Place;
@@ -16,21 +18,11 @@ interface PlaceMarkerProps {
 }
 
 export function PlaceMarker({ place, onPress }: PlaceMarkerProps) {
-  const config = CATEGORY_CONFIG[place.category];
-
   return (
     <Marker
-      key={place.id}
       coordinate={{ latitude: place.latitude, longitude: place.longitude }}
+      pinColor={CATEGORY_PIN_COLOR[place.category]}
       onPress={() => onPress(place)}
-      tracksViewChanges={false}
-    >
-      <View
-        className="items-center justify-center rounded-full px-2 py-1"
-        style={{ backgroundColor: config.color }}
-      >
-        <Text className="text-white text-xs font-pmedium">{config.label}</Text>
-      </View>
-    </Marker>
+    />
   );
 }

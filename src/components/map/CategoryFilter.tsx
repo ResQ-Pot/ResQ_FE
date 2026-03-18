@@ -28,7 +28,7 @@ const CATEGORIES: {
   { key: 'convenience', label: '편의점', Icon: ConvenienceIcon },
 ];
 
-const ICON_SIZE = 14;
+const ICON_SIZE = 13;
 
 interface CategoryFilterProps {
   active: CategoryFilter;
@@ -40,18 +40,18 @@ export function CategoryFilter({ active, onSelect }: CategoryFilterProps) {
     <ScrollView
       horizontal
       showsHorizontalScrollIndicator={false}
-      contentContainerClassName="gap-2 px-4"
+      contentContainerClassName="gap-2"
     >
       {CATEGORIES.map(({ key, label, Icon }) => {
         const isActive = active === key;
         return (
           <TouchableOpacity
             key={key}
-            onPress={() => onSelect(key)}
+            onPress={() => onSelect(isActive ? 'all' : key)}
             activeOpacity={0.7}
-            className={`flex-row items-center rounded-full ${isActive ? 'bg-green-500' : 'bg-white'}`}
+            className={`flex-row items-center rounded-full ${isActive ? 'bg-gray-500' : 'bg-white'}`}
             style={{
-              paddingHorizontal: 15,
+              paddingHorizontal: 13,
               paddingVertical: 8,
               borderWidth: isActive ? 0 : 1,
               borderColor: colors.gray[5],
@@ -59,7 +59,7 @@ export function CategoryFilter({ active, onSelect }: CategoryFilterProps) {
           >
             <Icon height={ICON_SIZE} />
             <Text
-              className={`ml-1.5 text-[13px] font-pmedium ${isActive ? 'text-white' : 'text-gray-10'}`}
+              className={`ml-1.5 text-[13px] font-psemibold ${isActive ? 'text-white' : 'text-gray-10'}`}
             >
               {label}
             </Text>
