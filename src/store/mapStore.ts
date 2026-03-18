@@ -1,18 +1,16 @@
 import { create } from 'zustand';
 import type { Place, PlaceCategory } from '@t/place';
 
-type CategoryFilter = PlaceCategory | 'all';
-
 interface MapStore {
-  activeCategory: CategoryFilter;
-  setActiveCategory: (category: CategoryFilter) => void;
+  activeCategory: PlaceCategory | null;
+  setActiveCategory: (category: PlaceCategory | null) => void;
 
   selectedPlace: Place | null;
   setSelectedPlace: (place: Place | null) => void;
 }
 
 export const useMapStore = create<MapStore>((set) => ({
-  activeCategory: 'all',
+  activeCategory: null,
   setActiveCategory: (category) => set({ activeCategory: category }),
 
   selectedPlace: null,

@@ -2,14 +2,14 @@ import { Marker } from 'react-native-maps';
 import type { Place } from '@t/place';
 
 const CATEGORY_PIN_COLOR: Record<string, string> = {
-  hospital: '#F28B82',
-  shelter: '#81C995',
-  pharmacy: '#F06292',
-  fire_station: '#E67E22',
-  aed: '#F24822',
-  police: '#7BAAF7',
-  water: '#4FC3F7',
-  convenience: '#B39DDB',
+  hospital: '#EF9A9A',
+  shelter: '#A5D6A7',
+  pharmacy: '#F48FB1',
+  fire_station: '#FFCC80',
+  aed: '#FFAB91',
+  police: '#90CAF9',
+  water: '#80DEEA',
+  convenience: '#CE93D8',
 };
 
 interface PlaceMarkerProps {

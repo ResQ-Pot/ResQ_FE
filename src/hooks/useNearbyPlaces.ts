@@ -3,33 +3,14 @@ import { fetchNearbyPlaces } from '@api/placesApi';
 import type { Place, PlaceCategory } from '@t/place';
 import type { Coordinates } from '@t/location';
 
-const ALL_CATEGORIES: PlaceCategory[] = [
-  'hospital',
-  'shelter',
-  'pharmacy',
-  'fire_station',
-  'aed',
-  'police',
-  'water',
-  'convenience',
-];
-
-export function useNearbyPlaces(coords: Coordinates | null, category: PlaceCategory | 'all') {
+export function useNearbyPlaces(coords: Coordinates | null, category: PlaceCategory | null) {
   return useQuery<Place[]>({
     queryKey: ['nearbyPlaces', coords?.latitude, coords?.longitude, category],
     queryFn: async () => {
-      if (!coords) return [];
-      const { latitude, longitude } = coords;
-
-      if (category === 'all') {
-        const results = await Promise.all(
-          ALL_CATEGORIES.map((c) => fetchNearbyPlaces(latitude, longitude, c)),
-        );
-        return results.flat();
-      }
-      return fetchNearbyPlaces(latitude, longitude, category);
+      if (!coords || !category) return [];
+      return fetchNearbyPlaces(coords.latitude, coords.longitude, category);
     },
-    enabled: !!coords,
+    enabled: !!coords && !!category,
     staleTime: 1000 * 60 * 5,
   });
 }
