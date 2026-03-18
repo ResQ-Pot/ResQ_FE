@@ -11,10 +11,8 @@ import PoliceIcon from '@/assets/icons/map/police.svg';
 import WaterIcon from '@/assets/icons/map/water.svg';
 import ConvenienceIcon from '@/assets/icons/map/convenience.svg';
 
-type CategoryFilter = PlaceCategory | 'all';
-
 const CATEGORIES: {
-  key: CategoryFilter;
+  key: PlaceCategory;
   label: string;
   Icon: React.FC<{ width?: number; height?: number }>;
 }[] = [
@@ -31,8 +29,8 @@ const CATEGORIES: {
 const ICON_SIZE = 13;
 
 interface CategoryFilterProps {
-  active: CategoryFilter;
-  onSelect: (category: CategoryFilter) => void;
+  active: PlaceCategory | null;
+  onSelect: (category: PlaceCategory | null) => void;
 }
 
 export function CategoryFilter({ active, onSelect }: CategoryFilterProps) {
@@ -47,7 +45,7 @@ export function CategoryFilter({ active, onSelect }: CategoryFilterProps) {
         return (
           <TouchableOpacity
             key={key}
-            onPress={() => onSelect(isActive ? 'all' : key)}
+            onPress={() => onSelect(isActive ? null : key)}
             activeOpacity={0.7}
             className={`flex-row items-center rounded-full ${isActive ? 'bg-gray-500' : 'bg-white'}`}
             style={{
