@@ -12,9 +12,9 @@ export function ScreenHeader({ title, onBack }: ScreenHeaderProps) {
   const router = useRouter();
 
   return (
-    <View className="flex-row items-center justify-center px-6 py-4">
+    <View className="flex-row items-center justify-center px-6 py-5">
       <TouchableOpacity
-        activeOpacity={0.7}
+        activeOpacity={0.8}
         onPress={onBack ?? (() => router.back())}
         className="absolute left-6"
       >

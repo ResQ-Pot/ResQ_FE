@@ -63,7 +63,7 @@ export default function DisasterSmsScreen() {
         showsVerticalScrollIndicator={false}
       >
         {/* 오늘 */}
-        <Text className="text-[16px] font-pbold text-gray-13 mt-4 mb-1">오늘</Text>
+        <Text className="text-[16px] font-pbold text-gray-13 mt-4 mb-2">오늘</Text>
         {TODAY_MESSAGES.map((item) => (
           <NotificationItem
             key={item.id}
@@ -75,7 +75,7 @@ export default function DisasterSmsScreen() {
         ))}
 
         {/* 이전 알림 */}
-        <Text className="text-[16px] font-pbold text-gray-13 mt-4 mb-1">이전 알림</Text>
+        <Text className="text-[16px] font-pbold text-gray-13 mt-4 mb-2">이전 알림</Text>
         {PREVIOUS_MESSAGES.map((item) => (
           <NotificationItem
             key={item.id}

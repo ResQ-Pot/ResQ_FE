@@ -15,13 +15,13 @@ export function NotificationItem({ type, datetime, location, message }: Notifica
     <View className="flex-row gap-4 py-4">
       <View className="pt-[2px]">
         {type === 'horn' ? (
-          <HornIcon width={24} height={24} />
+          <HornIcon width={22} height={22} />
         ) : (
-          <WarningIcon width={24} height={24} />
+          <WarningIcon width={22} height={22} />
         )}
       </View>
       <View className="flex-1 gap-[6px]">
-        <Text className="text-[13px] font-pregular text-gray-8">
+        <Text className="text-[12px] font-pregular text-gray-8">
           {datetime} [{location}]
         </Text>
         <Text className="text-[14px] font-pregular text-gray-13 leading-[22px]">
