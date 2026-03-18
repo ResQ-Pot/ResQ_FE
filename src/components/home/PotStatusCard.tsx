@@ -4,7 +4,7 @@ import { colors } from '@config/tokens';
 import ThermometerIcon from '@/assets/icons/icon-thermometer.svg';
 import HumidityIcon from '@/assets/icons/icon-humidity.svg';
 
-const plantImage = require('@/assets/images/plant-character-surprise.png');
+const plantImage = require('@/assets/images/plant/plant-surprise.png');
 
 interface PotStatusCardProps {
   connected?: boolean;
