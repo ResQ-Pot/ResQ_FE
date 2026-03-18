@@ -4,9 +4,6 @@ import type { Place, PlaceCategory } from '@t/place';
 type CategoryFilter = PlaceCategory | 'all';
 
 interface MapStore {
-  searchQuery: string;
-  setSearchQuery: (query: string) => void;
-
   activeCategory: CategoryFilter;
   setActiveCategory: (category: CategoryFilter) => void;
 
@@ -15,9 +12,6 @@ interface MapStore {
 }
 
 export const useMapStore = create<MapStore>((set) => ({
-  searchQuery: '',
-  setSearchQuery: (query) => set({ searchQuery: query }),
-
   activeCategory: 'all',
   setActiveCategory: (category) => set({ activeCategory: category }),
 
