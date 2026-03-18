@@ -2,15 +2,33 @@ import { ScrollView, TouchableOpacity, Text } from 'react-native';
 import { colors } from '@config/tokens';
 import type { PlaceCategory } from '@t/place';
 
+import HospitalIcon from '@/assets/icons/map/hospital.svg';
+import ShelterIcon from '@/assets/icons/map/shelter.svg';
+import PharmacyIcon from '@/assets/icons/map/pharmacy.svg';
+import FireStationIcon from '@/assets/icons/map/fire-station.svg';
+import AedIcon from '@/assets/icons/map/aed.svg';
+import PoliceIcon from '@/assets/icons/map/police.svg';
+import WaterIcon from '@/assets/icons/map/water.svg';
+import ConvenienceIcon from '@/assets/icons/map/convenience.svg';
+
 type CategoryFilter = PlaceCategory | 'all';
 
-const CATEGORIES: { key: CategoryFilter; label: string }[] = [
-  { key: 'all', label: '전체' },
-  { key: 'hospital', label: '병원' },
-  { key: 'shelter', label: '대피소' },
-  { key: 'pharmacy', label: '약국' },
-  { key: 'fire_station', label: '소방서' },
+const CATEGORIES: {
+  key: CategoryFilter;
+  label: string;
+  Icon: React.FC<{ width?: number; height?: number }>;
+}[] = [
+  { key: 'hospital', label: '병원', Icon: HospitalIcon },
+  { key: 'shelter', label: '대피소', Icon: ShelterIcon },
+  { key: 'pharmacy', label: '약국', Icon: PharmacyIcon },
+  { key: 'fire_station', label: '소방서', Icon: FireStationIcon },
+  { key: 'aed', label: 'AED', Icon: AedIcon },
+  { key: 'police', label: '경찰서', Icon: PoliceIcon },
+  { key: 'water', label: '급수', Icon: WaterIcon },
+  { key: 'convenience', label: '편의점', Icon: ConvenienceIcon },
 ];
+
+const ICON_SIZE = 14;
 
 interface CategoryFilterProps {
   active: CategoryFilter;
@@ -22,20 +40,26 @@ export function CategoryFilter({ active, onSelect }: CategoryFilterProps) {
     <ScrollView
       horizontal
       showsHorizontalScrollIndicator={false}
-      contentContainerClassName="gap-2 px-1"
+      contentContainerClassName="gap-2 px-4"
     >
-      {CATEGORIES.map(({ key, label }) => {
+      {CATEGORIES.map(({ key, label, Icon }) => {
         const isActive = active === key;
         return (
           <TouchableOpacity
             key={key}
             onPress={() => onSelect(key)}
-            activeOpacity={0.8}
-            className={`px-4 py-2 rounded-full ${isActive ? 'bg-green-500' : 'bg-white'}`}
-            style={isActive ? undefined : { borderWidth: 1, borderColor: colors.gray[5] }}
+            activeOpacity={0.7}
+            className={`flex-row items-center rounded-full ${isActive ? 'bg-green-500' : 'bg-white'}`}
+            style={{
+              paddingHorizontal: 15,
+              paddingVertical: 8,
+              borderWidth: isActive ? 0 : 1,
+              borderColor: colors.gray[5],
+            }}
           >
+            <Icon height={ICON_SIZE} />
             <Text
-              className={`text-xs font-pmedium ${isActive ? 'text-white' : 'text-gray-9'}`}
+              className={`ml-1.5 text-[13px] font-pmedium ${isActive ? 'text-white' : 'text-gray-10'}`}
             >
               {label}
             </Text>

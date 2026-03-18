@@ -1,9 +1,18 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchNearbyPlaces, searchPlaces } from '@api/placesApi';
-import type { Place, PlaceCategory } from '@types/place';
-import type { Coordinates } from '@types/location';
+import { fetchNearbyPlaces } from '@api/placesApi';
+import type { Place, PlaceCategory } from '@t/place';
+import type { Coordinates } from '@t/location';
 
-const ALL_CATEGORIES: PlaceCategory[] = ['hospital', 'shelter', 'pharmacy', 'fire_station'];
+const ALL_CATEGORIES: PlaceCategory[] = [
+  'hospital',
+  'shelter',
+  'pharmacy',
+  'fire_station',
+  'aed',
+  'police',
+  'water',
+  'convenience',
+];
 
 export function useNearbyPlaces(coords: Coordinates | null, category: PlaceCategory | 'all') {
   return useQuery<Place[]>({
@@ -22,17 +31,5 @@ export function useNearbyPlaces(coords: Coordinates | null, category: PlaceCateg
     },
     enabled: !!coords,
     staleTime: 1000 * 60 * 5,
-  });
-}
-
-export function usePlaceSearch(query: string, coords: Coordinates | null) {
-  return useQuery<Place[]>({
-    queryKey: ['placeSearch', query, coords?.latitude, coords?.longitude],
-    queryFn: () => {
-      if (!coords || !query.trim()) return [];
-      return searchPlaces(query, coords.latitude, coords.longitude);
-    },
-    enabled: !!coords && query.trim().length > 1,
-    staleTime: 1000 * 60 * 2,
   });
 }

@@ -1,4 +1,12 @@
-export type PlaceCategory = 'hospital' | 'shelter' | 'pharmacy' | 'fire_station';
+export type PlaceCategory =
+  | 'hospital'
+  | 'shelter'
+  | 'pharmacy'
+  | 'fire_station'
+  | 'aed'
+  | 'police'
+  | 'water'
+  | 'convenience';
 
 export interface Place {
   id: string;
