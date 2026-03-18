@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { View, Text, Animated, Pressable } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors } from '@config/tokens';
@@ -34,19 +34,30 @@ interface PlaceBottomSheetProps {
 export function PlaceBottomSheet({ place, onClose }: PlaceBottomSheetProps) {
   const insets = useSafeAreaInsets();
   const translateY = useRef(new Animated.Value(200)).current;
+  const [localPlace, setLocalPlace] = useState<Place | null>(null);
 
   useEffect(() => {
-    Animated.spring(translateY, {
-      toValue: place ? 0 : 200,
-      useNativeDriver: true,
-      tension: 20,
-      friction: 20,
-    }).start();
+    if (place) {
+      setLocalPlace(place);
+      Animated.spring(translateY, {
+        toValue: 0,
+        useNativeDriver: true,
+        tension: 20,
+        friction: 20,
+      }).start();
+    } else {
+      Animated.spring(translateY, {
+        toValue: 200,
+        useNativeDriver: true,
+        tension: 20,
+        friction: 20,
+      }).start(() => setLocalPlace(null));
+    }
   }, [place, translateY]);
 
-  if (!place) return null;
+  if (!localPlace) return null;
 
-  const color = CATEGORY_COLOR[place.category];
+  const color = CATEGORY_COLOR[localPlace.category];
 
   return (
     <>
@@ -73,29 +84,29 @@ export function PlaceBottomSheet({ place, onClose }: PlaceBottomSheetProps) {
           style={{ backgroundColor: color + '20' }}
         >
           <Text className="text-xm font-pmedium" style={{ color }}>
-            {CATEGORY_LABEL[place.category]}
+            {CATEGORY_LABEL[localPlace.category]}
           </Text>
         </View>
 
         {/* 장소 이름 */}
-        <Text className="font-pbold text-[18px] text-gray-13 mb-1">{place.name}</Text>
+        <Text className="font-pbold text-[18px] text-gray-13 mb-1">{localPlace.name}</Text>
 
         {/* 주소 */}
-        <Text className="font-pregular text-[15px] text-gray-8 mb-3">{place.vicinity}</Text>
+        <Text className="font-pregular text-[15px] text-gray-8 mb-3">{localPlace.vicinity}</Text>
 
         {/* 영업 상태 + 평점 */}
         <View className="flex-row items-center gap-4">
-          {place.isOpen !== undefined && (
+          {localPlace.isOpen !== undefined && (
             <Text
               className="text-sm font-pmedium"
-              style={{ color: place.isOpen ? colors.green[500] : '#EF4444' }}
+              style={{ color: localPlace.isOpen ? colors.green[500] : '#EF4444' }}
             >
-              {place.isOpen ? '영업중' : '영업종료'}
+              {localPlace.isOpen ? '영업중' : '영업종료'}
             </Text>
           )}
-          {place.rating !== undefined && (
+          {localPlace.rating !== undefined && (
             <Text className="text-sm font-pregular text-gray-8">
-              ★ {place.rating.toFixed(1)}
+              ★ {localPlace.rating.toFixed(1)}
             </Text>
           )}
         </View>
