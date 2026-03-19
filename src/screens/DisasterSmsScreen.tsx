@@ -1,61 +1,64 @@
 import { useState } from 'react';
-import { Text, ScrollView, View } from 'react-native';
+import { Text, ScrollView, View, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ScreenHeader } from '@components/ScreenHeader';
 import { FilterToggle, FilterValue } from '@components/notifications/FilterToggle';
 import { NotificationItem } from '@components/notifications/NotificationItem';
+import { useNotifications } from '@api/notificationsApi';
+import type { NotificationItem as NotificationData } from '@t/notification';
 
-const TODAY_MESSAGES = [
-  {
-    id: '1',
-    datetime: '2026/03/15 14:03:26',
-    location: '전라남도 무안군',
-    message:
-      '[관내 아프리카돼지열병(ASF) 확산 방지를 위해 ▲축산농가 방문 자제 ▲출입통제 강화 ▲소독 철저 등 방역수칙을 준수해 주시기 바랍니다.',
-  },
-  {
-    id: '2',
-    datetime: '2026/03/15 14:03:26',
-    location: '전라남도 무안군',
-    message:
-      '[관내 아프리카돼지열병(ASF) 확산 방지를 위해 ▲축산농가 방문 자제 ▲출입통제 강화 ▲소독 철저 등 방역수칙을 준수해 주시기 바랍니다.',
-  },
-];
+const NEARBY_REGION = '서울특별시';
 
-const PREVIOUS_MESSAGES = [
-  {
-    id: '3',
-    datetime: '2026/03/15 14:03:26',
-    location: '전라남도 무안군',
-    message:
-      '[관내 아프리카돼지열병(ASF) 확산 방지를 위해 ▲축산농가 방문 자제 ▲출입통제 강화 ▲소독 철저 등 방역수칙을 준수해 주시기 바랍니다.',
-  },
-  {
-    id: '4',
-    datetime: '2026/03/15 14:03:26',
-    location: '전라남도 무안군',
-    message:
-      '[관내 아프리카돼지열병(ASF) 확산 방지를 위해 ▲축산농가 방문 자제 ▲출입통제 강화 ▲소독 철저 등 방역수칙을 준수해 주시기 바랍니다.',
-  },
-  {
-    id: '5',
-    datetime: '2026/03/15 14:03:26',
-    location: '전라남도 무안군',
-    message:
-      '[관내 아프리카돼지열병(ASF) 확산 방지를 위해 ▲축산농가 방문 자제 ▲출입통제 강화 ▲소독 철저 등 방역수칙을 준수해 주시기 바랍니다.',
-  },
-  {
-    id: '6',
-    datetime: '2026/03/15 14:03:26',
-    location: '전라남도 무안군',
-    message:
-      '[관내 아프리카돼지열병(ASF) 확산 방지를 위해 ▲축산농가 방문 자제 ▲출입통제 강화 ▲소독 철저 등 방역수칙을 준수해 주시기 바랍니다.',
-  },
-];
+function formatDatetime(isoString: string): string {
+  const d = new Date(isoString);
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  const hh = String(d.getHours()).padStart(2, '0');
+  const min = String(d.getMinutes()).padStart(2, '0');
+  const ss = String(d.getSeconds()).padStart(2, '0');
+  return `${yyyy}/${mm}/${dd} ${hh}:${min}:${ss}`;
+}
+
+function isToday(isoString: string): boolean {
+  const today = new Date();
+  const date = new Date(isoString);
+  return (
+    date.getFullYear() === today.getFullYear() &&
+    date.getMonth() === today.getMonth() &&
+    date.getDate() === today.getDate()
+  );
+}
+
+function NotificationList({ items }: { items: NotificationData[] }) {
+  return (
+    <>
+      {items.map((item) => (
+        <NotificationItem
+          key={item.notificationId}
+          type="warning"
+          datetime={formatDatetime(item.issuedAt)}
+          location={item.targetRegions.trim()}
+          message={item.message}
+        />
+      ))}
+    </>
+  );
+}
 
 export default function DisasterSmsScreen() {
   const [filter, setFilter] = useState<FilterValue>('first');
+
+  const nearbyQuery = useNotifications(NEARBY_REGION);
+  const nationalQuery = useNotifications();
+
+  const isNearby = filter === 'first';
+  const { data, isLoading } = isNearby ? nearbyQuery : nationalQuery;
+
+  const notifications = data?.data.notifications ?? [];
+  const todayItems = notifications.filter((n) => isToday(n.issuedAt));
+  const previousItems = notifications.filter((n) => !isToday(n.issuedAt));
 
   return (
     <SafeAreaView className="flex-1 bg-white" edges={['top']}>
@@ -66,7 +69,6 @@ export default function DisasterSmsScreen() {
         contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: 32 }}
         showsVerticalScrollIndicator={false}
       >
-        {/* 오늘 */}
         <View className="flex-row items-center justify-between mt-4 mb-2">
           <Text className="text-[16px] font-pbold text-gray-13">오늘</Text>
           <FilterToggle
@@ -76,27 +78,25 @@ export default function DisasterSmsScreen() {
             secondLabel="전국"
           />
         </View>
-        {TODAY_MESSAGES.map((item) => (
-          <NotificationItem
-            key={item.id}
-            type="warning"
-            datetime={item.datetime}
-            location={item.location}
-            message={item.message}
-          />
-        ))}
 
-        {/* 이전 알림 */}
-        <Text className="text-[16px] font-pbold text-gray-13 mt-4 mb-2">이전 알림</Text>
-        {PREVIOUS_MESSAGES.map((item) => (
-          <NotificationItem
-            key={item.id}
-            type="warning"
-            datetime={item.datetime}
-            location={item.location}
-            message={item.message}
-          />
-        ))}
+        {isLoading ? (
+          <ActivityIndicator className="mt-8" />
+        ) : (
+          <>
+            {todayItems.length > 0 ? (
+              <NotificationList items={todayItems} />
+            ) : (
+              <Text className="text-[14px] font-pregular text-gray-7 py-4">오늘 재난 문자가 없습니다.</Text>
+            )}
+
+            {previousItems.length > 0 && (
+              <>
+                <Text className="text-[16px] font-pbold text-gray-13 mt-4 mb-2">이전 알림</Text>
+                <NotificationList items={previousItems} />
+              </>
+            )}
+          </>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
