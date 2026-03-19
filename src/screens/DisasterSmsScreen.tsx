@@ -1,7 +1,9 @@
-import { Text, ScrollView } from 'react-native';
+import { useState } from 'react';
+import { Text, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ScreenHeader } from '@components/ScreenHeader';
+import { FilterToggle, FilterValue } from '@components/notifications/FilterToggle';
 import { NotificationItem } from '@components/notifications/NotificationItem';
 
 const TODAY_MESSAGES = [
@@ -53,6 +55,8 @@ const PREVIOUS_MESSAGES = [
 ];
 
 export default function DisasterSmsScreen() {
+  const [filter, setFilter] = useState<FilterValue>('first');
+
   return (
     <SafeAreaView className="flex-1 bg-white" edges={['top']}>
       <ScreenHeader title="재난 문자" />
@@ -63,7 +67,15 @@ export default function DisasterSmsScreen() {
         showsVerticalScrollIndicator={false}
       >
         {/* 오늘 */}
-        <Text className="text-[16px] font-pbold text-gray-13 mt-4 mb-2">오늘</Text>
+        <View className="flex-row items-center justify-between mt-4 mb-2">
+          <Text className="text-[16px] font-pbold text-gray-13">오늘</Text>
+          <FilterToggle
+            value={filter}
+            onChange={setFilter}
+            firstLabel="내 주변"
+            secondLabel="전국"
+          />
+        </View>
         {TODAY_MESSAGES.map((item) => (
           <NotificationItem
             key={item.id}
