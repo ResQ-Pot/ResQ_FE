@@ -1,13 +1,21 @@
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, type ImageSourcePropType } from 'react-native';
 import { colors } from '@config/tokens';
 
 import ThermometerIcon from '@/assets/icons/icon-thermometer.svg';
 import HumidityIcon from '@/assets/icons/icon-humidity.svg';
 
-const plantImage = require('@/assets/images/plant/plant-surprise.png');
+const PLANT_IMAGES: Record<string, ImageSourcePropType> = {
+  SMILE: require('@/assets/images/plant/plant-default.png'),
+  DEFAULT: require('@/assets/images/plant/plant-surprise.png'),
+};
+
+function getPlantImage(expression?: string): ImageSourcePropType {
+  return (expression && PLANT_IMAGES[expression]) ? PLANT_IMAGES[expression] : PLANT_IMAGES.DEFAULT;
+}
 
 interface PotStatusCardProps {
   connected?: boolean;
+  expression?: string;
   tempC?: number;
   humidity?: number;
   message?: string;
@@ -15,6 +23,7 @@ interface PotStatusCardProps {
 
 export function PotStatusCard({
   connected = true,
+  expression,
   tempC = 14,
   humidity = 60,
   message = '오늘 비가 내리네요!\n우산 챙기세요',
@@ -43,7 +52,7 @@ export function PotStatusCard({
 
           {/* 연결 상태 */}
           <View className="flex-row items-center gap-2 mb-4">
-            <Text className="text-xl font-pbold text-gray-13">연결됨</Text>
+            <Text className="text-xl font-pbold text-gray-13">{connected ? '연결됨' : '연결 안됨'}</Text>
             <View
               className="w-3 h-3 rounded-full"
               style={{ backgroundColor: connected ? colors.green[500] : colors.status.danger }}
@@ -56,7 +65,7 @@ export function PotStatusCard({
 
         {/* 화분 캐릭터 */}
         <Image
-          source={plantImage}
+          source={getPlantImage(expression)}
           style={{ width: 110, height: 110 }}
           resizeMode="contain"
         />
