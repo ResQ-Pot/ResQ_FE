@@ -20,7 +20,7 @@ export default function HomeScreen() {
   const router = useRouter();
   const riskScore = 30; // TODO: 실제 데이터로 교체
   const status = getStatusFromScore(riskScore);
-
+  
   return (
     <SafeAreaView className="flex-1 bg-gray-3" edges={['top']}>
       <HomeHeader
@@ -31,7 +31,7 @@ export default function HomeScreen() {
 
       <ScrollView
         className="flex-1"
-        contentContainerStyle={{ gap: 19, paddingHorizontal: 24, paddingBottom: 24 }}
+        contentContainerStyle={{ gap: 19, paddingHorizontal: 20, paddingBottom: 24 }}
         showsVerticalScrollIndicator={false}
       >
         <SafetyStatusCard
