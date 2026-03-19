@@ -1,10 +1,10 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { View, Text, ActivityIndicator } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Region } from 'react-native-maps';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useLocation } from '@hooks/useLocation';
-import { useNearbyPlaces } from '@hooks/useNearbyPlaces';
+import { useAllFacilities, latitudeDeltaToRadius } from '@hooks/useNearbyPlaces';
 import { useMapStore } from '@store/mapStore';
 import { MapSearchBar } from '@components/map/MapSearchBar';
 import { CategoryFilter } from '@components/map/CategoryFilter';
@@ -13,12 +13,15 @@ import { UserLocationMarker } from '@components/map/UserLocationMarker';
 import { PlaceBottomSheet } from '@components/map/PlaceBottomSheet';
 import { colors } from '@config/tokens';
 import type { Place } from '@t/place';
+import type { Coordinates } from '@t/location';
+
+const INITIAL_LATITUDE_DELTA = 0.02;
 
 const DEFAULT_REGION: Region = {
   latitude: 37.4946403,
   longitude: 126.9594151,
-  latitudeDelta: 0.02,
-  longitudeDelta: 0.02,
+  latitudeDelta: INITIAL_LATITUDE_DELTA,
+  longitudeDelta: INITIAL_LATITUDE_DELTA,
 };
 
 export default function MapScreen() {
@@ -30,7 +33,20 @@ export default function MapScreen() {
 
   const hasCenteredRef = useRef(false);
 
-  const { data: places = [], isLoading: placesLoading } = useNearbyPlaces(coords, activeCategory);
+  // 지도 현재 중심 좌표와 반경 (zoom 레벨 연동)
+  const [mapCenter, setMapCenter] = useState<Coordinates | null>(null);
+  const [mapRadius, setMapRadius] = useState(latitudeDeltaToRadius(INITIAL_LATITUDE_DELTA));
+
+  // 전체 시설 데이터 1회 호출 (center/radius 변경 시 재호출)
+  const { data: allPlaces = [], isLoading: placesLoading } = useAllFacilities(
+    mapCenter ?? coords,
+    mapRadius,
+  );
+
+  // 카테고리 칩 → 클라이언트 필터링만 (API 호출 없음)
+  const places = activeCategory
+    ? allPlaces.filter((p) => p.category === activeCategory)
+    : allPlaces;
 
   // 첫 위치 확인 시 지도 이동
   if (coords && !hasCenteredRef.current) {
@@ -39,12 +55,17 @@ export default function MapScreen() {
       {
         latitude: coords.latitude,
         longitude: coords.longitude,
-        latitudeDelta: 0.02,
-        longitudeDelta: 0.02,
+        latitudeDelta: INITIAL_LATITUDE_DELTA,
+        longitudeDelta: INITIAL_LATITUDE_DELTA,
       },
       600,
     );
   }
+
+  const handleRegionChangeComplete = (region: Region) => {
+    setMapCenter({ latitude: region.latitude, longitude: region.longitude });
+    setMapRadius(latitudeDeltaToRadius(region.latitudeDelta));
+  };
 
   const handleMarkerPress = (place: Place) => {
     setSelectedPlace(place);
@@ -72,8 +93,8 @@ export default function MapScreen() {
     ? {
         latitude: coords.latitude,
         longitude: coords.longitude,
-        latitudeDelta: 0.02,
-        longitudeDelta: 0.02,
+        latitudeDelta: INITIAL_LATITUDE_DELTA,
+        longitudeDelta: INITIAL_LATITUDE_DELTA,
       }
     : DEFAULT_REGION;
 
@@ -87,6 +108,7 @@ export default function MapScreen() {
         initialRegion={initialRegion}
         showsMyLocationButton={false}
         showsCompass={false}
+        onRegionChangeComplete={handleRegionChangeComplete}
       >
         {coords && <UserLocationMarker coords={coords} />}
         {places.map((place) => (

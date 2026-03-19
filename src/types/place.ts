@@ -8,6 +8,18 @@ export type PlaceCategory =
   | 'water'
   | 'convenience';
 
+// 서버 API type 필드 (대문자)
+export type FacilityType =
+  | 'HOSPITAL'
+  | 'SHELTER'
+  | 'PHARMACY'
+  | 'FIRE_STATION'
+  | 'AED'
+  | 'POLICE'
+  | 'WATER'
+  | 'CONVENIENCE';
+
+// 앱 내부에서 사용하는 장소 타입
 export interface Place {
   id: string;
   name: string;
@@ -15,24 +27,27 @@ export interface Place {
   vicinity: string;
   latitude: number;
   longitude: number;
-  isOpen?: boolean;
-  rating?: number;
+  distanceMeters?: number;
+  extraInfo?: string;
 }
 
-export interface PlacesNearbyResponse {
-  results: GooglePlace[];
-  status: string;
-  next_page_token?: string;
-}
-
-export interface GooglePlace {
-  place_id: string;
+// 서버 응답 타입
+export interface FacilityItem {
+  id: string;
+  type: FacilityType;
   name: string;
-  vicinity: string;
-  geometry: {
-    location: { lat: number; lng: number };
+  lat: number;
+  lng: number;
+  address: string;
+  distanceMeters: number;
+  extraInfo: string | null;
+}
+
+export interface FacilitiesResponse {
+  centerLocation: {
+    lat: number;
+    lng: number;
   };
-  opening_hours?: { open_now: boolean };
-  rating?: number;
-  types: string[];
+  totalCount: number;
+  facilities: FacilityItem[];
 }

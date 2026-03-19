@@ -1,20 +1,42 @@
-import type { Place, PlaceCategory } from '@t/place';
-import { MOCK_PLACES } from './__mocks__/placesData';
+import { apiInstance } from '@api/instance';
+import type { FacilitiesResponse, FacilityType, Place, PlaceCategory } from '@t/place';
 
-// TODO: 백엔드 연동 시 아래 mock 로직을 제거하고 주석 해제
-// import { apiInstance } from '@api/instance';
-// export async function fetchNearbyPlaces(...) {
-//   const { data } = await apiInstance.get<Place[]>('/places', {
-//     params: { category, lat: latitude, lng: longitude, radius },
-//   });
-//   return data;
-// }
+const TYPE_TO_CATEGORY: Record<FacilityType, PlaceCategory> = {
+  HOSPITAL: 'hospital',
+  SHELTER: 'shelter',
+  PHARMACY: 'pharmacy',
+  FIRE_STATION: 'fire_station',
+  AED: 'aed',
+  POLICE: 'police',
+  WATER: 'water',
+  CONVENIENCE: 'convenience',
+};
 
-export async function fetchNearbyPlaces(
-  _latitude: number,
-  _longitude: number,
-  category: PlaceCategory,
-  _radius = 3000,
+function mapToPlace(item: import('@t/place').FacilityItem): Place {
+  return {
+    id: item.id,
+    name: item.name,
+    category: TYPE_TO_CATEGORY[item.type],
+    vicinity: item.address,
+    latitude: item.lat,
+    longitude: item.lng,
+    distanceMeters: item.distanceMeters,
+    extraInfo: item.extraInfo ?? undefined,
+  };
+}
+
+export async function fetchAllFacilities(
+  latitude: number,
+  longitude: number,
+  radius: number,
 ): Promise<Place[]> {
-  return MOCK_PLACES.filter((p) => p.category === category);
+  const { data } = await apiInstance.get<FacilitiesResponse>('/api/v1/facilities', {
+    params: {
+      lat: latitude,
+      lng: longitude,
+      radius,
+    },
+  });
+
+  return data.facilities.map(mapToPlace);
 }
