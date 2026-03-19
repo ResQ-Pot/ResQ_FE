@@ -35,6 +35,13 @@ export function PlaceBottomSheet({ place, onClose }: PlaceBottomSheetProps) {
   const insets = useSafeAreaInsets();
   const translateY = useRef(new Animated.Value(200)).current;
   const [localPlace, setLocalPlace] = useState<Place | null>(null);
+  const isMounted = useRef(true);
+
+  useEffect(() => {
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
 
   useEffect(() => {
     if (place) {
@@ -51,7 +58,11 @@ export function PlaceBottomSheet({ place, onClose }: PlaceBottomSheetProps) {
         useNativeDriver: true,
         tension: 20,
         friction: 20,
-      }).start(() => setLocalPlace(null));
+      }).start(({ finished }) => {
+        if (finished && isMounted.current && !place) {
+          setLocalPlace(null);
+        }
+      });
     }
   }, [place, translateY]);
 
