@@ -72,7 +72,7 @@ export default function DisasterSmsScreen() {
           <FilterToggle
             value={filter}
             onChange={setFilter}
-            firstLabel="내 주변"
+            firstLabel="주변"
             secondLabel="전국"
           />
         </View>

@@ -16,9 +16,9 @@ interface FilterToggleProps {
   trackColor?: string;
 }
 
-const ITEM_WIDTH = 52;
-const ITEM_HEIGHT = 28;
-const PADDING = 2;
+const ITEM_WIDTH = 44;
+const ITEM_HEIGHT = 24;
+const PADDING = 3;
 
 export function FilterToggle({
   value,
@@ -27,8 +27,8 @@ export function FilterToggle({
   secondLabel,
   activeIndicatorColor = colors.gray[1],
   activeTextColor = colors.gray[13],
-  inactiveTextColor = colors.gray[13],
-  trackColor = colors.gray[5],
+  inactiveTextColor = colors.gray[8],
+  trackColor = colors.gray[4],
 }: FilterToggleProps) {
   const slideAnim = useRef(new Animated.Value(value === 'first' ? 0 : 1)).current;
 
@@ -53,6 +53,8 @@ export function FilterToggle({
       style={{
         flexDirection: 'row',
         borderRadius: 999,
+        borderColor: colors.gray[5],
+        borderWidth: 1,
         backgroundColor: trackColor,
         padding: PADDING,
         alignItems: 'center',
