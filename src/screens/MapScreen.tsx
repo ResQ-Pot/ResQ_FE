@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
-import { View, Text, ActivityIndicator } from 'react-native';
+import { View, Text, ActivityIndicator, Pressable } from 'react-native';
+import RefreshIcon from '@/assets/icons/icon_refresh.svg';
 import MapView, { PROVIDER_GOOGLE, Region } from 'react-native-maps';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -33,11 +34,16 @@ export default function MapScreen() {
 
   const hasCenteredRef = useRef(false);
 
-  // 지도 현재 중심 좌표와 반경 (zoom 레벨 연동)
+  // 마지막으로 검색한 위치 (API 호출 기준)
   const [mapCenter, setMapCenter] = useState<Coordinates | null>(null);
   const [mapRadius, setMapRadius] = useState(latitudeDeltaToRadius(INITIAL_LATITUDE_DELTA));
 
-  // 전체 시설 데이터 1회 호출 (center/radius 변경 시 재호출)
+  // 지도가 이동했지만 아직 검색 안 한 위치 (버튼 표시용)
+  const [pendingCenter, setPendingCenter] = useState<Coordinates | null>(null);
+  const [pendingRadius, setPendingRadius] = useState(latitudeDeltaToRadius(INITIAL_LATITUDE_DELTA));
+  const [showSearchButton, setShowSearchButton] = useState(false);
+
+  // 전체 시설 데이터 — mapCenter/mapRadius가 바뀔 때(버튼 탭)만 호출
   const { data: allPlaces = [], isLoading: placesLoading } = useAllFacilities(
     mapCenter ?? coords,
     mapRadius,
@@ -63,8 +69,15 @@ export default function MapScreen() {
   }
 
   const handleRegionChangeComplete = (region: Region) => {
-    setMapCenter({ latitude: region.latitude, longitude: region.longitude });
-    setMapRadius(latitudeDeltaToRadius(region.latitudeDelta));
+    setPendingCenter({ latitude: region.latitude, longitude: region.longitude });
+    setPendingRadius(latitudeDeltaToRadius(region.latitudeDelta));
+    setShowSearchButton(true);
+  };
+
+  const handleSearchThisArea = () => {
+    setMapCenter(pendingCenter);
+    setMapRadius(pendingRadius);
+    setShowSearchButton(false);
   };
 
   const handleMarkerPress = (place: Place) => {
@@ -128,6 +141,18 @@ export default function MapScreen() {
       {(locationLoading || placesLoading) && (
         <View className="absolute top-1/2 left-1/2 -translate-x-6 -translate-y-6">
           <ActivityIndicator size="large" color={colors.green[500]} />
+        </View>
+      )}
+
+      {/* 하단 오버레이 */}
+      {showSearchButton && (
+        <View
+          className="absolute right-4"
+          style={{ bottom: insets.bottom }}
+        >
+          <Pressable onPress={handleSearchThisArea}>
+            <RefreshIcon width={60} height={60} />
+          </Pressable>
         </View>
       )}
 
